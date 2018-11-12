@@ -1,0 +1,9 @@
+{
+  "name": "flow-down-chrome-ext",
+  "version": "1.0.0",
+  "description": "FlowDown state inspector for Chrome devtools.",
+  "main": "main.html",
+  "author": "Mauro Colella",
+  "license": "MIT",
+  "private": true
+}
