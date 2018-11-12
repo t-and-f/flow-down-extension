@@ -1,0 +1,7 @@
+{
+    "name": "FlowDown inspector",
+    "version": "1.0",
+    "description": "Inspect the flow-down store and actions.",
+    "manifest_version": 2,
+    "devtools_page": "main.html"
+}
