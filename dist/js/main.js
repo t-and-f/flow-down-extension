@@ -17288,17 +17288,29 @@ chrome.devtools.panels.create("FlowDown", "", "panel.html", function (panel) {
     var ui = new _lib_ui__WEBPACK_IMPORTED_MODULE_0__["default"]($('.display')[0]);
     var notfoundView = _lib_viewsFactory__WEBPACK_IMPORTED_MODULE_1__["default"].getView(_views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_3___default.a);
     var stateTreeView = _lib_viewsFactory__WEBPACK_IMPORTED_MODULE_1__["default"].getView(_views_statetree_tpl_html__WEBPACK_IMPORTED_MODULE_4___default.a);
-    chrome.devtools.inspectedWindow.eval("window.__flowDownStores__ !== undefined ? window.__flowDownStores__.get(0).getState() : null", function (result, exceptionInfo) {
-      if (result) {
-        var str = JSON.stringify(result, null, 4);
-        ui.present(stateTreeView.render({
-          raw: Object(_lib_utils__WEBPACK_IMPORTED_MODULE_2__["highlightSyntax"])(str)
-        }));
-      } else {
-        console.debug(exceptionInfo);
-        ui.present(notfoundView.render());
-      }
-    });
+    var stateCache = null;
+
+    function poll() {
+      chrome.devtools.inspectedWindow.eval("window.__flowDownStores__ !== undefined ? window.__flowDownStores__.get(0).getState() : null", function (result, exceptionInfo) {
+        if (result) {
+          if (JSON.stringify(result) !== JSON.stringify(stateCache)) {
+            stateCache = Object.assign({}, result);
+            var str = JSON.stringify(result, null, 4);
+            ui.present(stateTreeView.render({
+              raw: Object(_lib_utils__WEBPACK_IMPORTED_MODULE_2__["highlightSyntax"])(str)
+            }));
+          }
+        } else {
+          console.debug(exceptionInfo);
+          ui.present(notfoundView.render());
+        }
+      });
+      setTimeout(function () {
+        requestAnimationFrame(poll());
+      }, 50);
+    }
+
+    poll();
   });
 });
 
