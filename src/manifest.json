@@ -3,5 +3,6 @@
     "version": "1.0",
     "description": "Inspect the flow-down store and actions.",
     "manifest_version": 2,
-    "devtools_page": "main.html"
+    "devtools_page": "main.html",
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
