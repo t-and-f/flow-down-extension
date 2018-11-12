@@ -17270,46 +17270,120 @@ module.exports = function(module) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../views/notfound.tpl.html */ "./src/views/notfound.tpl.html");
-/* harmony import */ var _views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _lib_ui__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/ui */ "./src/lib/ui.js");
+/* harmony import */ var _lib_viewsFactory__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/viewsFactory */ "./src/lib/viewsFactory.js");
+/* harmony import */ var _views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../views/notfound.tpl.html */ "./src/views/notfound.tpl.html");
+/* harmony import */ var _views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_2__);
 
 
-
-function empty(node) {
-  while (node.firstChild) {
-    node.removeChild(node.firstChild);
-  }
-}
-
-function present(node, snapshot) {
-  console.log(snapshot);
-  node.innerHTML = snapshot;
-}
 
 chrome.devtools.panels.create("FlowDown", "", "panel.html", function (panel) {
   panel.onShown.addListener(function (devpane) {
     var $ = devpane.document.querySelectorAll.bind(devpane.document);
-    var $display = $('.display')[0];
-    var notfoundView = {
-      render: Object(lodash__WEBPACK_IMPORTED_MODULE_0__["template"])(_views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_1___default.a)
-    };
+    var ui = new _lib_ui__WEBPACK_IMPORTED_MODULE_0__["default"]($('.display')[0]);
+    var notfoundView = _lib_viewsFactory__WEBPACK_IMPORTED_MODULE_1__["default"].getView(_views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_2___default.a);
     chrome.devtools.inspectedWindow.eval("window.__flowDownStores__ !== undefined ? window.__flowDownStores__.get(0).getState() : null", function (result, exceptionInfo) {
       if (result) {
         console.log({
           store: result
         });
-        empty($display);
-        present($display, notfoundView.render());
       } else {
         console.debug(exceptionInfo);
-        empty($display);
-        present($display, notfoundView.render());
+        ui.empty();
+        ui.present(notfoundView.render());
       }
     });
   });
 });
+
+/***/ }),
+
+/***/ "./src/lib/ui.js":
+/*!***********************!*\
+  !*** ./src/lib/ui.js ***!
+  \***********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var UI =
+/*#__PURE__*/
+function () {
+  function UI(node) {
+    _classCallCheck(this, UI);
+
+    this.node = node;
+  }
+
+  _createClass(UI, [{
+    key: "empty",
+    value: function empty() {
+      var node = this.node;
+
+      while (node.firstChild) {
+        node.removeChild(node.firstChild);
+      }
+    }
+  }, {
+    key: "present",
+    value: function present(snapshot) {
+      this.node.innerHTML = snapshot;
+    }
+  }]);
+
+  return UI;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (UI);
+
+/***/ }),
+
+/***/ "./src/lib/viewsFactory.js":
+/*!*********************************!*\
+  !*** ./src/lib/viewsFactory.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var viewsFactory =
+/*#__PURE__*/
+function () {
+  function viewsFactory() {
+    _classCallCheck(this, viewsFactory);
+  }
+
+  _createClass(viewsFactory, null, [{
+    key: "getView",
+    value: function getView(tpl) {
+      return {
+        render: Object(lodash__WEBPACK_IMPORTED_MODULE_0__["template"])(tpl)
+      };
+    }
+  }]);
+
+  return viewsFactory;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (viewsFactory);
 
 /***/ }),
 
@@ -17320,7 +17394,7 @@ chrome.devtools.panels.create("FlowDown", "", "panel.html", function (panel) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Hello World!</h1>\n";
+module.exports = "<em>This page doesn't appear to use <strong>flow-down</strong></em>\n";
 
 /***/ })
 
