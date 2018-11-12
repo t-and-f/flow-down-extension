@@ -13,6 +13,7 @@ class UI {
     }
 
     present(snapshot) {
+        this.empty();
         this.node.innerHTML = snapshot;
     }
 }

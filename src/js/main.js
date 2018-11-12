@@ -1,6 +1,11 @@
 import UI from '../lib/ui';
 import viewsFactory from '../lib/viewsFactory';
+import {
+    highlightSyntax
+} from '../lib/utils';
+
 import notfoundTpl from '../views/notfound.tpl.html';
+import stateTreeTpl from '../views/statetree.tpl.html';
 
 chrome.devtools.panels.create("FlowDown",
     "",
@@ -11,17 +16,18 @@ chrome.devtools.panels.create("FlowDown",
             const ui = new UI($('.display')[0]);
 
             const notfoundView = viewsFactory.getView(notfoundTpl);
+            const stateTreeView = viewsFactory.getView(stateTreeTpl);
 
             chrome.devtools.inspectedWindow.eval(
                 "window.__flowDownStores__ !== undefined ? window.__flowDownStores__.get(0).getState() : null",
                 function(result, exceptionInfo) {
                     if (result) {
-                        console.log({
-                            store: result
-                        });
+                        const str = JSON.stringify(result, null, 4);
+                        ui.present(stateTreeView.render({
+                            raw: highlightSyntax(str)
+                        }));
                     } else {
                         console.debug(exceptionInfo);
-                        ui.empty();
                         ui.present(notfoundView.render());
                     }
                 }

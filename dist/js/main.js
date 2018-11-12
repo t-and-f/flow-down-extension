@@ -17272,8 +17272,13 @@ module.exports = function(module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_ui__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/ui */ "./src/lib/ui.js");
 /* harmony import */ var _lib_viewsFactory__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/viewsFactory */ "./src/lib/viewsFactory.js");
-/* harmony import */ var _views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../views/notfound.tpl.html */ "./src/views/notfound.tpl.html");
-/* harmony import */ var _views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/utils */ "./src/lib/utils.js");
+/* harmony import */ var _views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../views/notfound.tpl.html */ "./src/views/notfound.tpl.html");
+/* harmony import */ var _views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _views_statetree_tpl_html__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../views/statetree.tpl.html */ "./src/views/statetree.tpl.html");
+/* harmony import */ var _views_statetree_tpl_html__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_views_statetree_tpl_html__WEBPACK_IMPORTED_MODULE_4__);
+
+
 
 
 
@@ -17281,15 +17286,16 @@ chrome.devtools.panels.create("FlowDown", "", "panel.html", function (panel) {
   panel.onShown.addListener(function (devpane) {
     var $ = devpane.document.querySelectorAll.bind(devpane.document);
     var ui = new _lib_ui__WEBPACK_IMPORTED_MODULE_0__["default"]($('.display')[0]);
-    var notfoundView = _lib_viewsFactory__WEBPACK_IMPORTED_MODULE_1__["default"].getView(_views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_2___default.a);
+    var notfoundView = _lib_viewsFactory__WEBPACK_IMPORTED_MODULE_1__["default"].getView(_views_notfound_tpl_html__WEBPACK_IMPORTED_MODULE_3___default.a);
+    var stateTreeView = _lib_viewsFactory__WEBPACK_IMPORTED_MODULE_1__["default"].getView(_views_statetree_tpl_html__WEBPACK_IMPORTED_MODULE_4___default.a);
     chrome.devtools.inspectedWindow.eval("window.__flowDownStores__ !== undefined ? window.__flowDownStores__.get(0).getState() : null", function (result, exceptionInfo) {
       if (result) {
-        console.log({
-          store: result
-        });
+        var str = JSON.stringify(result, null, 4);
+        ui.present(stateTreeView.render({
+          raw: Object(_lib_utils__WEBPACK_IMPORTED_MODULE_2__["highlightSyntax"])(str)
+        }));
       } else {
         console.debug(exceptionInfo);
-        ui.empty();
         ui.present(notfoundView.render());
       }
     });
@@ -17334,6 +17340,7 @@ function () {
   }, {
     key: "present",
     value: function present(snapshot) {
+      this.empty();
       this.node.innerHTML = snapshot;
     }
   }]);
@@ -17342,6 +17349,39 @@ function () {
 }();
 
 /* harmony default export */ __webpack_exports__["default"] = (UI);
+
+/***/ }),
+
+/***/ "./src/lib/utils.js":
+/*!**************************!*\
+  !*** ./src/lib/utils.js ***!
+  \**************************/
+/*! exports provided: highlightSyntax */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "highlightSyntax", function() { return highlightSyntax; });
+function highlightSyntax(json) {
+  json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+    var cls = 'number';
+
+    if (/^"/.test(match)) {
+      if (/:$/.test(match)) {
+        cls = 'key';
+      } else {
+        cls = 'string';
+      }
+    } else if (/true|false/.test(match)) {
+      cls = 'boolean';
+    } else if (/null/.test(match)) {
+      cls = 'null';
+    }
+
+    return '<span class="' + cls + '">' + match + '</span>';
+  });
+}
 
 /***/ }),
 
@@ -17395,6 +17435,17 @@ function () {
 /***/ (function(module, exports) {
 
 module.exports = "<em>This page doesn't appear to use <strong>flow-down</strong></em>\n";
+
+/***/ }),
+
+/***/ "./src/views/statetree.tpl.html":
+/*!**************************************!*\
+  !*** ./src/views/statetree.tpl.html ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<style>\n.string {\n    color: green;\n}\n\n.number {\n    color: darkorange;\n}\n\n.boolean {\n    color: blue;\n}\n\n.null {\n    color: magenta;\n}\n\n.key {\n    color: red;\n}\n\n</style>\n<pre>\n<%= raw %>\n</pre>\n";
 
 /***/ })
 
