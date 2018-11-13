@@ -1,4 +1,6 @@
-import diff from 'deep-diff';
+import {
+    diff
+} from 'deep-diff';
 
 // Libs
 import UI from '../lib/ui';
@@ -16,10 +18,6 @@ chrome.devtools.panels.create("FlowDown",
     "",
     "panel.html",
     function(panel) {
-        console.log({
-            panel,
-        });
-
         // Initialize
         panel.onShown.addListener(function(devpane) {
             const $ = devpane.document.querySelectorAll.bind(devpane.document);
@@ -38,15 +36,17 @@ chrome.devtools.panels.create("FlowDown",
                     function(result, exceptionInfo) {
                         if (result) {
                             if (JSON.stringify(result) !== JSON.stringify(stateCache)) {
-                                delta = diff(result, stateCache);
+                                delta = diff(stateCache, result);
                                 stateCache = Object.assign({}, result);
 
                                 const str = JSON.stringify(result, null, 4);
-                                const status = JSON.stringify(delta, null, 4);
+                                console.log({
+                                    delta
+                                });
 
                                 ui.present(stateTreeView.render({
                                     payload: highlightSyntax(str),
-                                    status,
+                                    status: delta,
                                 }));
                             }
                         } else {
