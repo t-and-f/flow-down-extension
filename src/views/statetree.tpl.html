@@ -36,7 +36,10 @@ body {
 
 .statusview {
     box-sizing: border-box;
-    padding: 10px;
+    height: 144px;
+    overflow: scroll;
+    margin: 0;
+    padding: 0;
 }
 
 </style>
@@ -44,5 +47,7 @@ body {
     <%= payload %>
 </pre>
 <div class="statusview">
-    <%= status %>
+    <pre>
+        <%= status %>
+    </pre>
 </div>
