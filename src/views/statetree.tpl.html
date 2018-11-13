@@ -1,4 +1,13 @@
 <style>
+html {
+    overflow: hidden;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
 .string {
     color: green;
 }
@@ -19,7 +28,21 @@
     color: red;
 }
 
+.objectview {
+    border-bottom: 1px solid #dedede;
+    height: calc(100% - 144px);
+    overflow: scroll;
+}
+
+.statusview {
+    box-sizing: border-box;
+    padding: 10px;
+}
+
 </style>
-<pre>
-<%= raw %>
+<pre class="objectview">
+    <%= payload %>
 </pre>
+<div class="statusview">
+    <%= status %>
+</div>

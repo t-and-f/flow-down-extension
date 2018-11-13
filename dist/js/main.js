@@ -17283,6 +17283,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 chrome.devtools.panels.create("FlowDown", "", "panel.html", function (panel) {
+  console.log({
+    panel: panel
+  });
   panel.onShown.addListener(function (devpane) {
     var $ = devpane.document.querySelectorAll.bind(devpane.document);
     var ui = new _lib_ui__WEBPACK_IMPORTED_MODULE_0__["default"]($('.display')[0]);
@@ -17297,7 +17300,8 @@ chrome.devtools.panels.create("FlowDown", "", "panel.html", function (panel) {
             stateCache = Object.assign({}, result);
             var str = JSON.stringify(result, null, 4);
             ui.present(stateTreeView.render({
-              raw: Object(_lib_utils__WEBPACK_IMPORTED_MODULE_2__["highlightSyntax"])(str)
+              payload: Object(_lib_utils__WEBPACK_IMPORTED_MODULE_2__["highlightSyntax"])(str),
+              status: 'TBD'
             }));
           }
         } else {
@@ -17306,7 +17310,7 @@ chrome.devtools.panels.create("FlowDown", "", "panel.html", function (panel) {
         }
       });
       setTimeout(function () {
-        requestAnimationFrame(poll());
+        requestAnimationFrame(poll);
       }, 50);
     }
 
@@ -17457,7 +17461,7 @@ module.exports = "<em>This page doesn't appear to use <strong>flow-down</strong>
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<style>\n.string {\n    color: green;\n}\n\n.number {\n    color: darkorange;\n}\n\n.boolean {\n    color: blue;\n}\n\n.null {\n    color: magenta;\n}\n\n.key {\n    color: red;\n}\n\n</style>\n<pre>\n<%= raw %>\n</pre>\n";
+module.exports = "<style>\nhtml {\n    overflow: hidden;\n}\n\nbody {\n    margin: 0;\n    padding: 0;\n}\n\n.string {\n    color: green;\n}\n\n.number {\n    color: darkorange;\n}\n\n.boolean {\n    color: blue;\n}\n\n.null {\n    color: magenta;\n}\n\n.key {\n    color: red;\n}\n\n.objectview {\n    border-bottom: 1px solid #dedede;\n    height: calc(100% - 144px);\n    overflow: scroll;\n}\n\n.statusview {\n    box-sizing: border-box;\n    padding: 10px;\n}\n\n</style>\n<pre class=\"objectview\">\n    <%= payload %>\n</pre>\n<div class=\"statusview\">\n    <%= status %>\n</div>\n";
 
 /***/ })
 

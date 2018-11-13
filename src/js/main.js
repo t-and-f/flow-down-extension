@@ -12,6 +12,10 @@ chrome.devtools.panels.create("FlowDown",
     "",
     "panel.html",
     function(panel) {
+        console.log({
+            panel,
+        });
+
         panel.onShown.addListener(function(devpane) {
             const $ = devpane.document.querySelectorAll.bind(devpane.document);
             const ui = new UI($('.display')[0]);
@@ -30,7 +34,8 @@ chrome.devtools.panels.create("FlowDown",
                                 stateCache = Object.assign({}, result);
                                 const str = JSON.stringify(result, null, 4);
                                 ui.present(stateTreeView.render({
-                                    raw: highlightSyntax(str)
+                                    payload: highlightSyntax(str),
+                                    status: 'TBD',
                                 }));
                             }
                         } else {
@@ -40,7 +45,7 @@ chrome.devtools.panels.create("FlowDown",
                     }
                 );
                 setTimeout(() => {
-                    requestAnimationFrame(poll());
+                    requestAnimationFrame(poll);
                 }, 50);
             }
 
